@@ -1,9 +1,38 @@
-  on:
-    push:
-  jobs:
-    quality_assurance:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: subosito/flutter-action@v2
-          run: flutter format --line-length 120 --set-exit-if-changed ./lib
+
+on:
+  push:
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get code
+        uses: actions/checkout@v2
+
+      - name: install flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+
+      - name: setup project
+        run: flutter pub get
+
+      - name: check format
+        run: flutter format -l 120 --set-exit-if-changed .
+
+  check-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: get code
+        uses: actions/checkout@v2
+
+      - name: install flutter
+        uses: subosito/flutter-action@v1
+        with:
+          channel: stable
+
+      - name: setup project
+        run: flutter pub get
+
+      - name: analize code
+        run: flutter analyze
